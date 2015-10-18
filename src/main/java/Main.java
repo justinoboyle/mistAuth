@@ -21,8 +21,8 @@ public class Main {
     staticFileLocation("/public");
 
     get("/hello", (req, res) -> "Hello World");
-
-    get("/aYY lmao", (req, res) -> "<h1>Hello</h1>");
+    
+    get("/ayylmao", (req, res) -> "req=" + req + "res=" + res);
 
     get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
