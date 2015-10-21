@@ -1,61 +1,72 @@
-import java.sql.*;
-import java.util.HashMap;
+package main.java;
+
+import static spark.Spark.get;
+import static spark.SparkBase.port;
+import static spark.SparkBase.staticFileLocation;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import spark.Request;
+import spark.Response;
 
-import static spark.Spark.*;
-import spark.template.freemarker.FreeMarkerEngine;
-import spark.ModelAndView;
-import static spark.Spark.get;
-
-import com.heroku.sdk.jdbc.DatabaseUrl;
+import com.justinoboyle.listeners.user.UserListener;
+import com.justinoboyle.user.User;
 
 public class Main {
 
-  public static void main(String[] args) {
+    private static List<Listener> listeners = new ArrayList<Listener>();
 
-    port(Integer.valueOf(System.getenv("PORT")));
-    staticFileLocation("/public");
-
-    get("/hello", (req, res) -> "Hello World");
-    
-    get("/ayylmao", (req, res) -> "req=" + req + "res=" + res);
-
-    get("/", (request, response) -> {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("message", "Hello World!");
-            return new ModelAndView(attributes, "index.ftl");
-        }, new FreeMarkerEngine());
-
-    get("/db", (req, res) -> {
-      Connection connection = null;
-      Map<String, Object> attributes = new HashMap<>();
-      try {
-        connection = DatabaseUrl.extract().getConnection();
-
-        Statement stmt = connection.createStatement();
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-        stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-        ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-        ArrayList<String> output = new ArrayList<String>();
-        while (rs.next()) {
-          output.add( "Read from DB: " + rs.getTimestamp("tick"));
+    public static void main(String[] args) {
+        
+        listeners.add(new UserListener());
+        
+        try {
+            try {
+                port(Integer.valueOf(System.getenv("PORT")));
+            } catch (Exception ex) {
+                boolean started = false;
+                int startPort = 8080;
+                while(!started) {
+                    try {
+                        port(startPort);
+                        started = true;
+                        System.out.println("Started on port " + startPort);
+                    }catch(Exception ex2) {
+                        ++startPort;
+                    }
+                }
+               
+            }
+            staticFileLocation("/public");
+            get("*", (req, res) -> test(req, res));
+            
+        } catch (Exception ex) {
+            System.err.println("Port already in use. Shutting down.");
+            System.exit(0);
+            return;
         }
+    }
 
-        attributes.put("results", output);
-        return new ModelAndView(attributes, "db.ftl");
-      } catch (Exception e) {
-        attributes.put("message", "There was an error: " + e);
-        return new ModelAndView(attributes, "error.ftl");
-      } finally {
-        if (connection != null) try{connection.close();} catch(SQLException e){}
-      }
-    }, new FreeMarkerEngine());
-
-  }
+    private static Object test(Request req, Response res) {
+        Map map = req.queryMap().toMap();
+        Map<String, String> data = new HashMap<String, String>();
+        try {
+            for (Object s : map.keySet())
+                data.put(s.toString(), (String) ((Object[]) map.get(s))[0].toString());
+        } catch (Exception ex) {
+        }
+        try {
+            for (Listener l : listeners) {
+                Object response = l.process(req, res, req.splat()[0], data);
+                if (response != null)
+                    return response;
+            }
+        } catch (Exception ex) {
+        }
+        return new SuccessResponse(false, "error", "method not found");
+    }
 
 }
