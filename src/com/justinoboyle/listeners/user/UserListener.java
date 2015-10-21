@@ -39,7 +39,7 @@ public class UserListener extends Listener {
             return new SuccessResponse(true, "success", usr.generateNewKey(req));
 
         }
-        if (listen.equals("usercreate")) {
+        if (listen.equals("newuser")) {
 
             if (!data.containsKey("email"))
                 return new SuccessResponse(false, "error", "No email was specified.");
