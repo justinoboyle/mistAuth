@@ -1,4 +1,4 @@
-package com.justinoboyle.util;
+package com.justinoboyle.utility;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

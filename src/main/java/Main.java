@@ -46,7 +46,7 @@ public class Main {
         } catch (Exception ex) {
             System.err.println("Port already in use. Shutting down.");
             System.exit(0);
-            return;
+            return; 
         }
     }
 

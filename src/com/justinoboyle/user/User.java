@@ -12,8 +12,8 @@ import spark.Request;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.justinoboyle.board.Soundboard;
-import com.justinoboyle.util.Saving;
-import com.justinoboyle.util.UtilPassword;
+import com.justinoboyle.utility.Saving;
+import com.justinoboyle.utility.UtilPassword;
 
 public class User {
 
