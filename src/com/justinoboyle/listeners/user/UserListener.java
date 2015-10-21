@@ -3,11 +3,11 @@ package com.justinoboyle.listeners.user;
 import java.util.Map;
 import java.util.Random;
 
-import main.java.Listener;
-import main.java.SuccessResponse;
 import spark.Request;
 import spark.Response;
 
+import com.justinoboyle.main.Listener;
+import com.justinoboyle.main.SuccessResponse;
 import com.justinoboyle.user.User;
 
 public class UserListener extends Listener {

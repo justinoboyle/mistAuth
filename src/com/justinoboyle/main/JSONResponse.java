@@ -1,4 +1,4 @@
-package main.java;
+package com.justinoboyle.main;
 
 import com.justinoboyle.utility.Saving;
 

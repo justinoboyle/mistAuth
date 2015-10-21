@@ -1,4 +1,4 @@
-package main.java;
+package com.justinoboyle.main;
 
 import java.util.ArrayList;
 import java.util.List;
