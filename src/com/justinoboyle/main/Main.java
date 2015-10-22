@@ -1,6 +1,5 @@
 package com.justinoboyle.main;
 
-
 import static spark.Spark.get;
 import static spark.SparkBase.port;
 import static spark.SparkBase.staticFileLocation;
@@ -12,6 +11,7 @@ import java.util.Map;
 
 import spark.Request;
 import spark.Response;
+import spark.Route;
 
 import com.justinoboyle.listeners.user.UserListener;
 
@@ -20,33 +20,37 @@ public class Main {
     private static List<Listener> listeners = new ArrayList<Listener>();
 
     public static void main(String[] args) {
-        
+
         listeners.add(new UserListener());
-        
+
         try {
             try {
                 port(Integer.valueOf(System.getenv("PORT")));
             } catch (Exception ex) {
                 boolean started = false;
                 int startPort = 8080;
-                while(!started) {
+                while (!started) {
                     try {
                         port(startPort);
                         started = true;
                         System.out.println("Started on port " + startPort);
-                    }catch(Exception ex2) {
+                    } catch (Exception ex2) {
                         ++startPort;
                     }
                 }
-               
+
             }
             staticFileLocation("/public");
-            get("*", (req, res) -> test(req, res));
-            
+            get("*", new Route() {
+                public Object handle(Request req, Response res) {
+                    return test(req, res);
+                }
+            });
+
         } catch (Exception ex) {
             System.err.println("Port already in use. Shutting down.");
             System.exit(0);
-            return; 
+            return;
         }
     }
 
