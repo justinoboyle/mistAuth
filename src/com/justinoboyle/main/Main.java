@@ -4,6 +4,7 @@ import static spark.Spark.get;
 import static spark.SparkBase.port;
 import static spark.SparkBase.staticFileLocation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +19,17 @@ import com.justinoboyle.listeners.user.UserListener;
 public class Main {
 
     private static List<Listener> listeners = new ArrayList<Listener>();
+    
+    public static String DATA_FOLDER = "./data/";
+    
 
     public static void main(String[] args) {
+        
+        if(args.length > 0) DATA_FOLDER = args[0];
+        
+        if(!DATA_FOLDER.endsWith("/")) DATA_FOLDER = DATA_FOLDER += "/";
+        
+        System.out.println("Data folder: " + new File(DATA_FOLDER).getAbsolutePath());
 
         listeners.add(new UserListener());
 

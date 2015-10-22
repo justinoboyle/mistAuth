@@ -12,6 +12,7 @@ import spark.Request;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.justinoboyle.board.Soundboard;
+import com.justinoboyle.main.Main;
 import com.justinoboyle.utility.Saving;
 import com.justinoboyle.utility.UtilPassword;
 
@@ -65,12 +66,12 @@ public class User {
     }
 
     public static boolean uuidExists(String uuid) {
-        File f = new File("./data/storage/users/" + Saving.toBase64(uuid));
+        File f = new File(Main.DATA_FOLDER + "storage/users/" + Saving.toBase64(uuid));
         return f.exists();
     }
     
     public static boolean emailExists(String email) {
-        File folder = new File("./data/storage/users/");
+        File folder = new File(Main.DATA_FOLDER + "storage/users/");
         if (!folder.exists())
             return false;
         folder.mkdirs();
@@ -85,7 +86,7 @@ public class User {
     }
 
     public static User getByUUID(String uuid) {
-        File folder = new File("./data/storage/users/");
+        File folder = new File(Main.DATA_FOLDER + "storage/users/");
         if (!folder.exists())
             return null;
         folder.mkdirs();
