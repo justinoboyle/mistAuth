@@ -36,6 +36,11 @@ public class Main {
                         System.out.println("Started on port " + startPort);
                     } catch (Exception ex2) {
                         ++startPort;
+                        if(startPort > 27016) {
+                            System.out.println("Quitting. Cannot find port.");
+                            System.exit(0);
+                            return;
+                        }
                     }
                 }
 
