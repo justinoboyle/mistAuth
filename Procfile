@@ -1,1 +1,1 @@
-web:    java -cp target/classes:target/dependency/* Main
+web:    java -jar -server target/srv-1.1-SNAPSHOT.jar
